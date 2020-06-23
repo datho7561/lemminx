@@ -9,6 +9,8 @@
 *******************************************************************************/
 package org.eclipse.lemminx.extensions.contentmodel.participants.codeactions;
 
+import org.eclipse.lemminx.dom.DOMDocument;
+import org.eclipse.lemminx.dom.SchemaLocation;
 import org.eclipse.lemminx.extensions.generators.FileContentGeneratorSettings;
 import org.eclipse.lemminx.extensions.generators.xml2xsd.XMLSchemaGeneratorSettings;
 
@@ -21,5 +23,20 @@ public class schema_reference_4CodeAction extends AbstractFixMissingGrammarCodeA
 	@Override
 	protected FileContentGeneratorSettings getFileContentGeneratorSettings() {
 		return new XMLSchemaGeneratorSettings();
+	}
+
+	@Override
+	protected boolean canGrammarBeGenerated(DOMDocument document) {
+		// The XSD generator can currently only successfully generate schemas
+		// for `noNamespaceSchemaLocation`, or for `schemaLocation` where there is one referenced schema.
+		// It also doesn't support mixed `noNamespaceSchemaLocation` and `schemaLocation`.
+		boolean noNamespaceExists = document.getNoNamespaceSchemaLocation() != null;
+		SchemaLocation schemaLocation = document.getSchemaLocation();
+		if (noNamespaceExists && schemaLocation == null) {
+			return true;
+		} else if (schemaLocation != null && !noNamespaceExists) {
+			return schemaLocation.getSchemaLocationHints().size() == 1;
+		}
+		return false;
 	}
 }

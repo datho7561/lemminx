@@ -9,6 +9,7 @@
 *******************************************************************************/
 package org.eclipse.lemminx.extensions.contentmodel.participants.codeactions;
 
+import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.extensions.generators.FileContentGeneratorSettings;
 import org.eclipse.lemminx.extensions.generators.xml2dtd.DTDGeneratorSettings;
 
@@ -20,5 +21,11 @@ public class dtd_not_foundCodeAction extends AbstractFixMissingGrammarCodeAction
 	@Override
 	protected FileContentGeneratorSettings getFileContentGeneratorSettings() {
 		return new DTDGeneratorSettings();
+	}
+
+	@Override
+	protected boolean canGrammarBeGenerated(DOMDocument document) {
+		// The generator supports generating any DTD right now
+		return true;
 	}
 }

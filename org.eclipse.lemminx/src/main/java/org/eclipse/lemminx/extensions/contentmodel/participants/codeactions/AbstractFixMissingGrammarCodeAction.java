@@ -44,8 +44,11 @@ public abstract class AbstractFixMissingGrammarCodeAction implements ICodeAction
 		if (p.toFile().exists()) {
 			return;
 		}
+		if (!canGrammarBeGenerated(document)) {
+			return;
+		}
 
-		// Generate XSD from the DOM doucment
+		// Generate XSD from the DOM document
 		FileContentGeneratorManager generator = componentProvider.getComponent(FileContentGeneratorManager.class);
 		String schemaTemplate = generator.generate(document, sharedSettings, getFileContentGeneratorSettings());
 
@@ -73,6 +76,11 @@ public abstract class AbstractFixMissingGrammarCodeAction implements ICodeAction
 
 		return null;
 	}
+
+	/**
+	 * Check the document structure to see if a grammar can be generated for it.
+	 */
+	protected abstract boolean canGrammarBeGenerated(DOMDocument document);
 
 	/**
 	 * Returns the grammar settings used to generate the missing grammar file(XSD,
