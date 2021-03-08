@@ -30,8 +30,11 @@ import org.apache.xerces.xni.parser.XMLParseException;
 import org.eclipse.lemminx.commons.BadLocationException;
 import org.eclipse.lemminx.commons.TextDocument;
 import org.eclipse.lemminx.dom.DOMDocument;
+import org.eclipse.lemminx.extensions.contentmodel.participants.AggregateRelatedInfoFinder;
+import org.eclipse.lemminx.extensions.contentmodel.participants.XMLRelatedInfoFinder;
 import org.eclipse.lemminx.extensions.xerces.xmlmodel.msg.XMLModelMessageFormatter;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticRelatedInformation;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -94,10 +97,11 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 		DiagnosticSeverity diagnosticSeverity = toLSPSeverity(severity);
 		Range adjustedRange = internalToLSPRange(location, key, arguments, message, diagnosticSeverity, fatalError,
 				xmlDocument);
+		List<DiagnosticRelatedInformation> relatedInformations = AggregateRelatedInfoFinder.getInstance().findRelatedInformation(location, key, xmlDocument);
 		if (adjustedRange == null || NO_RANGE.equals(adjustedRange)) {
 			return null;
 		}
-		if (addDiagnostic(adjustedRange, message, diagnosticSeverity, key) == null) {
+		if (addDiagnostic(adjustedRange, message, diagnosticSeverity, key, relatedInformations) == null) {
 			return null;
 		}
 		if (fatalError && !fContinueAfterFatalError) {
@@ -112,8 +116,11 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 		return false;
 	}
 
-	public Diagnostic addDiagnostic(Range adjustedRange, String message, DiagnosticSeverity severity, String key) {
+	public Diagnostic addDiagnostic(Range adjustedRange, String message, DiagnosticSeverity severity, String key, List<DiagnosticRelatedInformation> relatedInformation) {
 		Diagnostic d = new Diagnostic(adjustedRange, message, severity, source, key);
+		if (relatedInformation != null && relatedInformation.size() > 0){
+			d.setRelatedInformation(relatedInformation);
+		}
 		if (diagnostics.contains(d)) {
 			return null;
 		}
@@ -124,7 +131,7 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 
 	/**
 	 * Returns the LSP diagnostic severity according the SAX severity.
-	 * 
+	 *
 	 * @param severity the SAX severity
 	 * @return the LSP diagnostic severity according the SAX severity.
 	 */
@@ -139,7 +146,7 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 
 	/**
 	 * Create the LSP range from the SAX error.
-	 * 
+	 *
 	 * @param location           the Xerces location.
 	 * @param key                the Xerces error key.
 	 * @param arguments          the Xerces error arguments.
@@ -182,7 +189,7 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 	/**
 	 * Returns the range of the given error information, or {{@link #NO_RANGE} if
 	 * diagnostic must not be created and null otherwise.
-	 * 
+	 *
 	 * @param location           the Xerces location.
 	 * @param key                the Xerces error key.
 	 * @param arguments          the Xerces error arguments.
@@ -198,7 +205,7 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 
 	/**
 	 * Returns the LSP position from the SAX location.
-	 * 
+	 *
 	 * @param offset   the adjusted offset.
 	 * @param location the original SAX location.
 	 * @param document the text document.
@@ -217,7 +224,7 @@ public abstract class AbstractLSPErrorReporter extends XMLErrorReporter {
 
 	/**
 	 * Returns the DOM document which is validating.
-	 * 
+	 *
 	 * @return the DOM document which is validating.
 	 */
 	protected DOMDocument getDOMDocument() {
