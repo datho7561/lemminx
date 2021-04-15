@@ -33,6 +33,7 @@ import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MarkupKind;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 /**
  * This class holds values that represent the XSI xsd. Can be seen at
@@ -41,9 +42,9 @@ import org.eclipse.lsp4j.TextEdit;
 public class XSISchemaModel {
 
 	private static String lineSeparator = System.lineSeparator();
-	public static final String TYPE_DOC = "Specifies the type of an element. This attribute labels an element as a particular type, even though there might not be an element declaration in the schema binding that element to the type."; 
+	public static final String TYPE_DOC = "Specifies the type of an element. This attribute labels an element as a particular type, even though there might not be an element declaration in the schema binding that element to the type.";
 	public static final String NIL_DOC = "Indicates if an element should contain content. Valid values are `true` or `false`";
-	public static final String SCHEMA_LOCATION_DOC = 
+	public static final String SCHEMA_LOCATION_DOC =
 				"The xsi:schemaLocation attribute can be used in an XML document " +
 				"to reference an XML Schema document that has a target namespace. " +  lineSeparator +
 				"```xml  " + lineSeparator +
@@ -54,11 +55,11 @@ public class XSISchemaModel {
 				"  <!-- ... -->  " + lineSeparator +
 				"</ns:root>  " + lineSeparator +
 				"```" ;
-	public static final String NO_NAMESPACE_SCHEMA_LOCATION_DOC= 
+	public static final String NO_NAMESPACE_SCHEMA_LOCATION_DOC=
 				"The xsi:noNamespaceSchemaLocation attribute can be used in an XML document " + lineSeparator +
 				"to reference an XML Schema document that does not have a target namespace.  " + lineSeparator +
 				"```xml  " + lineSeparator +
-				"<root  " + lineSeparator + 
+				"<root  " + lineSeparator +
 				"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  "+ lineSeparator +
 				"  xsi:noNamespaceSchemaLocation=\"example.xsd\">" + lineSeparator +
 				"  <!-- ... -->  " + lineSeparator +
@@ -66,8 +67,8 @@ public class XSISchemaModel {
 				"```" ;
 	public static final String XSI_WEBSITE = "http://www.w3.org/2001/XMLSchema-instance";
 	public static final String XSI_DOC = "The namespace that defines important attributes such as `noNamespaceSchemaLocation` and `schemaLocation`.";
-	public static void computeCompletionResponses(ICompletionRequest request, 
-			ICompletionResponse response, DOMDocument document, boolean generateValue, 
+	public static void computeCompletionResponses(ICompletionRequest request,
+			ICompletionResponse response, DOMDocument document, boolean generateValue,
 			SharedSettings sharedSettings) throws BadLocationException {
 		Range editRange = request.getReplaceRange();
 		DOMElement rootElement = document.getDocumentElement();
@@ -100,27 +101,27 @@ public class XSISchemaModel {
 				return;// All the following completion cases dont exist, so return.
 			}
 		}
-		
+
 		String actualPrefix = document.getSchemaInstancePrefix();
 		if(actualPrefix == null) {
 			return;
 		}
-		
+
 		String name;
 		String documentation;
-		
+
 		boolean schemaLocationExists = document.hasSchemaLocation();
 		boolean noNamespaceSchemaLocationExists = document.hasNoNamespaceSchemaLocation();
 		//Indicates that no values are allowed inside an XML element
 		if(!hasAttribute(elementAtOffset, actualPrefix, "nil")) {
 			documentation = NIL_DOC;
 			name = actualPrefix + ":nil";
-			createCompletionItem(name, isSnippetsSupported, generateValue, editRange, StringUtils.TRUE, 
+			createCompletionItem(name, isSnippetsSupported, generateValue, editRange, StringUtils.TRUE,
 				StringUtils.TRUE_FALSE_ARRAY, documentation, response, sharedSettings);
 		}
-		//Signals that an element should be accepted as ·valid· when it has no content despite 
-		//a content type which does not require or even necessarily allow empty content. 
-		//An element may be ·valid· without content if it has the attribute xsi:nil with 
+		//Signals that an element should be accepted as ·valid· when it has no content despite
+		//a content type which does not require or even necessarily allow empty content.
+		//An element may be ·valid· without content if it has the attribute xsi:nil with
 		//the value true.
 		if(!hasAttribute(elementAtOffset, actualPrefix, "type")) {
 			documentation = TYPE_DOC;
@@ -128,10 +129,10 @@ public class XSISchemaModel {
 			createCompletionItem(name, isSnippetsSupported, generateValue, editRange, null, null,
 					documentation, response, sharedSettings);
 		}
-		
+
 		if(inRootElement) {
 			if(!schemaLocationExists) {
-				//The xsi:schemaLocation and xsi:noNamespaceSchemaLocation attributes can be used in a document 
+				//The xsi:schemaLocation and xsi:noNamespaceSchemaLocation attributes can be used in a document
 				//to provide hints as to the physical location of schema documents which may be used for ·assessment·.
 				documentation = SCHEMA_LOCATION_DOC;
 				name = actualPrefix + ":schemaLocation";
@@ -143,7 +144,7 @@ public class XSISchemaModel {
 				name = actualPrefix + ":noNamespaceSchemaLocation";
 				createCompletionItem(name, isSnippetsSupported, generateValue, editRange, null, null,
 						documentation, response, sharedSettings);
-			}	
+			}
 		}
 	}
 
@@ -159,19 +160,19 @@ public class XSISchemaModel {
 		response.addCompletionItem(item);
 	}
 
-	public static void computeValueCompletionResponses(ICompletionRequest request, 
+	public static void computeValueCompletionResponses(ICompletionRequest request,
 			ICompletionResponse response, DOMDocument document) throws BadLocationException {
 		Range editRange = request.getReplaceRange();
 		int offset = document.offsetAt(editRange.getStart());
 		DOMNode nodeAtOffset = request.getNode();
-		
+
 		String actualPrefix = document.getSchemaInstancePrefix();
 		DOMAttr attrAtOffset = nodeAtOffset.findAttrAt(offset);
 		if (attrAtOffset == null) {
 			return;
 		}
 		String attrName = attrAtOffset.getName();
-		
+
 		if(attrName != null) {
 			if(actualPrefix != null && attrName.equals(actualPrefix + ":nil")) { // Value completion for 'nil' attribute
 				createCompletionItemsForValues(StringUtils.TRUE_FALSE_ARRAY, document, request, response);
@@ -197,7 +198,7 @@ public class XSISchemaModel {
 			item.setLabel(option);
 			item.setFilterText(insertText);
 			item.setKind(CompletionItemKind.Enum);
-			item.setTextEdit(new TextEdit(editRange, insertText));
+			item.setTextEdit(Either.forLeft(new TextEdit(editRange, insertText)));
 			response.addCompletionItem(item);
 		}
 	}
@@ -209,7 +210,7 @@ public class XSISchemaModel {
 	 */
 	private static boolean hasAttribute(DOMElement root, String prefix, String suffix) {
 		return root.getAttributeNode(prefix, suffix) != null;
-		
+
 	}
 
 	private static boolean hasAttribute(DOMElement root, String name) {
@@ -255,7 +256,7 @@ public class XSISchemaModel {
 		content.setValue(doc);
 		return new Hover(content);
 	}
-	
+
 	public static boolean isXSISchemaLocationAttr(String name, DOMAttr attr) {
 		if (attr != null) {
 			String localName = attr.getLocalName();

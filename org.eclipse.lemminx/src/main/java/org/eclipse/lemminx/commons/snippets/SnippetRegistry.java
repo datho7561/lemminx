@@ -5,7 +5,7 @@
 * http://www.eclipse.org/legal/epl-v20.html
 *
 * SPDX-License-Identifier: EPL-2.0
-* 
+*
 * Contributors:
 *     Red Hat Inc. - initial API and implementation
 *******************************************************************************/
@@ -47,7 +47,7 @@ import com.google.gson.stream.JsonReader;
 
 /**
  * A registry for snippets which uses the same format than vscode snippet.
- * 
+ *
  * @author Angelo ZERR
  *
  */
@@ -63,7 +63,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Snippet registry for a given language id.
-	 * 
+	 *
 	 * @param languageId  the language id and null otherwise.
 	 * @param loadDefault true if default snippets from SPI must be loaded and false
 	 *                    otherwise.
@@ -88,7 +88,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the given snippet.
-	 * 
+	 *
 	 * @param snippet the snippet to register.
 	 */
 	public void registerSnippet(Snippet snippet) {
@@ -97,7 +97,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON input stream.
-	 * 
+	 *
 	 * @param in the JSON input stream which declares snippets with vscode snippet
 	 *           format.
 	 * @throws IOException
@@ -108,7 +108,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON stream with a context.
-	 * 
+	 *
 	 * @param in                  the JSON input stream which declares snippets with
 	 *                            vscode snippet format.
 	 * @param contextDeserializer the GSON context deserializer used to create Java
@@ -122,7 +122,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON stream with a context.
-	 * 
+	 *
 	 * @param in             the JSON input stream which declares snippets with
 	 *                       vscode snippet format.
 	 * @param defaultContext the default context.
@@ -134,7 +134,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON stream with a context.
-	 * 
+	 *
 	 * @param in                  the JSON input stream which declares snippets with
 	 *                            vscode snippet format.
 	 * @param defaultContext      the default context.
@@ -149,7 +149,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON reader.
-	 * 
+	 *
 	 * @param in the JSON reader which declares snippets with vscode snippet format.
 	 * @throws IOException
 	 */
@@ -159,7 +159,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON reader with a context.
-	 * 
+	 *
 	 * @param in                  the JSON reader which declares snippets with
 	 *                            vscode snippet format.
 	 * @param contextDeserializer the GSON context deserializer used to create Java
@@ -173,7 +173,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON stream with a context.
-	 * 
+	 *
 	 * @param in             the JSON reader which declares snippets with vscode
 	 *                       snippet format.
 	 * @param defaultContext the default context.
@@ -185,7 +185,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Register the snippets from the given JSON stream with a context.
-	 * 
+	 *
 	 * @param in                  the JSON reader which declares snippets with
 	 *                            vscode snippet format.
 	 * @param defaultContext      the default context.
@@ -220,7 +220,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Returns all snippets.
-	 * 
+	 *
 	 * @return all snippets.
 	 */
 	public List<Snippet> getSnippets() {
@@ -229,7 +229,7 @@ public class SnippetRegistry {
 
 	/**
 	 * Returns the snippet completion items according to the context filter.
-	 * 
+	 *
 	 * @param replaceRange       the replace range.
 	 * @param lineDelimiter      the line delimiter.
 	 * @param canSupportMarkdown true if markdown is supported to generate
@@ -263,7 +263,7 @@ public class SnippetRegistry {
 					range = new Range(replaceRange.getStart(), end);
 				}
 			}
-			item.setTextEdit(new TextEdit(range, insertText));
+			item.setTextEdit(Either.forLeft(new TextEdit(range, insertText)));
 			item.setInsertTextFormat(InsertTextFormat.Snippet);
 			item.setSortText(snippet.getSortText());
 			return item;

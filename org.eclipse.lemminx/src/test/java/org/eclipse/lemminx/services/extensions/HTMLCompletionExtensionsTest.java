@@ -95,20 +95,20 @@ public class HTMLCompletionExtensionsTest {
 		/*
 		 * testCompletionFor("<input t|ype=\"text\"", r("type", "type=\"text\""), //
 		 * r("style", "style=\"text\""));
-		 * 
+		 *
 		 * testCompletionFor("<input type=\"text\" |", r("style",
 		 * "<input type=\"text\" style=\"$1\""), // r("type",
 		 * "<input type=\"text\" style=\"$1\""), // r("size",
 		 * "<input type=\"text\" size=\"$1\""));
-		 * 
+		 *
 		 * testCompletionFor("<input type=\"text\" s|", r("type",
 		 * "<input type=\"text\""), // r("src", "<input type=\"text\" src=\"$1\""), //
 		 * r("size", "<input type=\"text\" size=\"$1\""));
-		 * 
+		 *
 		 * testCompletionFor("<input di| type=\"text\"", r("disabled",
 		 * "<input disabled=\"$1\" type=\"text\""), // r("dir",
 		 * "<input dir=\"$1\" type=\"text\""));
-		 * 
+		 *
 		 * testCompletionFor("<input disabled | type=\"text\"", r("dir",
 		 * "<input disabled dir=\"$1\" type=\"text\""), // r("style",
 		 * "<input disabled style=\"$1\" type=\"text\""));
@@ -123,7 +123,7 @@ public class HTMLCompletionExtensionsTest {
 	}
 
 	@Test
-	public void testHTMLOnXMLContentCompletion() throws BadLocationException {		
+	public void testHTMLOnXMLContentCompletion() throws BadLocationException {
 		testCompletionFor("<input>|</input>", //
 				c("Test replace range", "replacement text", r(0, 7, 0, 7), null));
 		testCompletionFor("<input> |</input>", //
@@ -161,7 +161,7 @@ public class HTMLCompletionExtensionsTest {
 					item.setFilterText(completionRequest.getFilterForStartTagName(tag));
 					item.setKind(CompletionItemKind.Property);
 					item.setDocumentation(Either.forLeft(label));
-					item.setTextEdit(new TextEdit(range, "<" + tag + "/>"));
+					item.setTextEdit(Either.forLeft(new TextEdit(range, "<" + tag + "/>")));
 					item.setInsertTextFormat(InsertTextFormat.PlainText);
 					completionResponse.addCompletionItem(item);
 				});
@@ -186,7 +186,7 @@ public class HTMLCompletionExtensionsTest {
 								item.setLabel(attribute);
 								item.setKind(CompletionItemKind.Value);
 								String value = generateValue ? "=\"$1\"" : "";
-								item.setTextEdit(new TextEdit(replaceRange, attribute + value));
+								item.setTextEdit(Either.forLeft(new TextEdit(replaceRange, attribute + value)));
 								item.setInsertTextFormat(InsertTextFormat.Snippet);
 								completionResponse.addCompletionAttribute(item);
 							}
@@ -222,7 +222,7 @@ public class HTMLCompletionExtensionsTest {
 									item.setLabel(value);
 									item.setFilterText(insertText);
 									item.setKind(CompletionItemKind.Unit);
-									item.setTextEdit(new TextEdit(fullRange, insertText));
+									item.setTextEdit(Either.forLeft(new TextEdit(fullRange, insertText)));
 									item.setInsertTextFormat(InsertTextFormat.PlainText);
 									completionResponse.addCompletionAttribute(item);
 								}
@@ -239,7 +239,7 @@ public class HTMLCompletionExtensionsTest {
 				TextEdit edit = new TextEdit();
 				edit.setNewText("replacement text");
 				edit.setRange(request.getReplaceRange());
-				completion.setTextEdit(edit);
+				completion.setTextEdit(Either.forLeft(edit));
 				response.addCompletionItem(completion);
 			}
 		}

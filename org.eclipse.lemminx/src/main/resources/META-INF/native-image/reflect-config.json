@@ -477,6 +477,14 @@
 		}]
 	},
 	{
+		"name": "org.eclipse.lsp4j.CodeActionResolveSupportCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.CodeLensCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
@@ -494,6 +502,14 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.CodeLensParams",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.CodeLensWorkspaceCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -657,7 +673,23 @@
 		]
 	},
 	{
+		"name": "org.eclipse.lsp4j.CompletionItemInsertTextModeSupportCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.CompletionItemTagSupportCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.CompletionItemResolveSupportCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1029,6 +1061,14 @@
 		}]
 	},
 	{
+		"name": "org.eclipse.lsp4j.FileOperationsWorkspaceCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.FoldingRange",
 		"allDeclaredFields": true,
 		"methods": [{
@@ -1077,6 +1117,14 @@
 		}]
 	},
 	{
+		"name": "org.eclipse.lsp4j.GeneralClientCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.HoverCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
@@ -1118,8 +1166,18 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.InsertTextFormat",
-		"fields": [{
-			"name": "value"
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": ["int"]
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.InsertTextMode",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": ["int"]
 		}]
 	},
 	{
@@ -1132,6 +1190,22 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.LocationLink",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.LinkedEditingRangeCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.MarkdownCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1225,6 +1299,14 @@
 		}]
 	},
 	{
+		"name": "org.eclipse.lsp4j.RegularExpressionsCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.Registration",
 		"allDeclaredFields": true,
 		"methods": [{
@@ -1309,7 +1391,17 @@
 		}]
 	},
 	{
-		"name": "org.eclipse.lsp4j.SemanticHighlightingCapabilities",
+		"name": "org.eclipse.lsp4j.SemanticTokensCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": [
+				"java.lang.Boolean"
+			]
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequests",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1317,7 +1409,15 @@
 		}]
 	},
 	{
-		"name": "org.eclipse.lsp4j.SemanticHighlightingServerCapabilities",
+		"name": "org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequestsFull",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.SemanticTokensWorkspaceCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1334,6 +1434,14 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.ServerInfo",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.ShowDocumentCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1396,6 +1504,14 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.SymbolInformation",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.SymbolTagSupportCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1503,6 +1619,32 @@
 		}]
 	},
 	{
+		"name": "org.eclipse.lsp4j.WindowClientCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.WindowShowMessageRequestCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.WindowShowMessageRequestActionItemCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": [
+				"java.lang.Boolean"
+			]
+		}]
+	},
+	{
 		"name": "org.eclipse.lsp4j.WorkspaceClientCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
@@ -1520,6 +1662,14 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.WorkspaceEditCapabilities",
+		"allDeclaredFields": true,
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.WorkspaceEditChangeAnnotationSupportCapabilities",
 		"allDeclaredFields": true,
 		"methods": [{
 			"name": "<init>",
@@ -1608,6 +1758,13 @@
 	},
 	{
 		"name": "org.eclipse.lsp4j.adapters.ResourceOperationTypeAdapter",
+		"methods": [{
+			"name": "<init>",
+			"parameterTypes": []
+		}]
+	},
+	{
+		"name": "org.eclipse.lsp4j.adapters.SemanticTokensFullDeltaResponseAdapter",
 		"methods": [{
 			"name": "<init>",
 			"parameterTypes": []

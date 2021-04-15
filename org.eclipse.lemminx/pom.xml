@@ -170,6 +170,7 @@
 								--no-fallback
 								--enable-http
 								--enable-https
+								--allow-incomplete-classpath
 								${graalvm.static}
 							</buildArgs>
 						</configuration>

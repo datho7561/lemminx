@@ -32,8 +32,8 @@ public class XMLReferencesCompletionParticipant extends CompletionParticipantAda
 	@Override
 	public void onXMLContent(ICompletionRequest request, ICompletionResponse response, CancelChecker cancelChecker) throws Exception {
 		int offset = request.getOffset();
-		final DOMNode node = getNodeAt(request.getNode(), offset);	
-		if (node != null) {			
+		final DOMNode node = getNodeAt(request.getNode(), offset);
+		if (node != null) {
 			XMLReferencesManager.getInstance().collect(node, n -> {
 				DOMDocument doc = n.getOwnerDocument();
 				Range range = XMLPositionUtility.createRange(node.getStart(), node.getEnd(), doc);
@@ -44,7 +44,7 @@ public class XMLReferencesCompletionParticipant extends CompletionParticipantAda
 				item.setKind(CompletionItemKind.Property);
 				item.setDocumentation(Either.forLeft(label));
 				item.setFilterText(insertText);
-				item.setTextEdit(new TextEdit(range, insertText));
+				item.setTextEdit(Either.forLeft(new TextEdit(range, insertText)));
 				item.setInsertTextFormat(InsertTextFormat.PlainText);
 				response.addCompletionItem(item);
 			});

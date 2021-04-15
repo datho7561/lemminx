@@ -29,10 +29,11 @@ import org.eclipse.lsp4j.MarkupKind;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.CancelChecker;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 /**
  * XSD completion for
- * 
+ *
  * <ul>
  * <li>xs:/@type -> xs:complexType/@name</li>
  * <li>xs:/@base -> xs:complexType/@name</li>
@@ -67,7 +68,7 @@ public class XSDCompletionParticipant extends CompletionParticipantAdapter {
 						item.setLabel(value);
 						item.setKind(CompletionItemKind.Value);
 						item.setFilterText(insertText);
-						item.setTextEdit(new TextEdit(fullRange, insertText));
+						item.setTextEdit(Either.forLeft(new TextEdit(fullRange, insertText)));
 						response.addCompletionItem(item);
 					});
 			if (bindingType.isSimple()) {
@@ -83,7 +84,7 @@ public class XSDCompletionParticipant extends CompletionParticipantAdapter {
 					item.setLabel(value);
 					item.setKind(CompletionItemKind.Value);
 					item.setFilterText(insertText);
-					item.setTextEdit(new TextEdit(fullRange, insertText));
+					item.setTextEdit(Either.forLeft(new TextEdit(fullRange, insertText)));
 					response.addCompletionItem(item);
 				});
 			}

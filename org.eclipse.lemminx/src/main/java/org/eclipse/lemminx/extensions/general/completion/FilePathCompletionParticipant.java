@@ -40,6 +40,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.CancelChecker;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 /**
  * Extension to support completion for file, folder path in:
@@ -253,7 +254,7 @@ public class FilePathCompletionParticipant extends CompletionParticipantAdapter 
 
 		item.setSortText(CompletionSortTextHelper.getSortText(kind));
 		item.setFilterText(insertText);
-		item.setTextEdit(new TextEdit(replaceRange, insertText));
+		item.setTextEdit(Either.forLeft(new TextEdit(replaceRange, insertText)));
 		response.addCompletionItem(item);
 	}
 

@@ -238,12 +238,12 @@ public class XMLAssert {
 
 		CompletionItem match = getCompletionMatch(matches, expected);
 		if (expected.getTextEdit() != null && match.getTextEdit() != null) {
-			if (expected.getTextEdit().getNewText() != null) {
-				assertEquals(expected.getTextEdit().getNewText(), match.getTextEdit().getNewText());
+			if (expected.getTextEdit().getLeft().getNewText() != null) {
+				assertEquals(expected.getTextEdit().getLeft().getNewText(), match.getTextEdit().getLeft().getNewText());
 			}
-			Range r = expected.getTextEdit().getRange();
+			Range r = expected.getTextEdit().getLeft().getRange();
 			if (r != null && r.getStart() != null && r.getEnd() != null) {
-				assertEquals(expected.getTextEdit().getRange(), match.getTextEdit().getRange());
+				assertEquals(expected.getTextEdit().getLeft().getRange(), match.getTextEdit().getLeft().getRange());
 			}
 		}
 		if (expected.getFilterText() != null && match.getFilterText() != null) {
@@ -258,7 +258,7 @@ public class XMLAssert {
 
 	private static CompletionItem getCompletionMatch(List<CompletionItem> matches, CompletionItem expected) {
 		for (CompletionItem item : matches) {
-			if (expected.getTextEdit().getNewText().equals(item.getTextEdit().getNewText())) {
+			if (expected.getTextEdit().getLeft().getNewText().equals(item.getTextEdit().getLeft().getNewText())) {
 				return item;
 			}
 		}
@@ -274,7 +274,7 @@ public class XMLAssert {
 		CompletionItem item = new CompletionItem();
 		item.setLabel(label);
 		item.setFilterText(filterText);
-		item.setTextEdit(textEdit);
+		item.setTextEdit(Either.forLeft(textEdit));
 		if (kind == null) {
 			item.setDocumentation(documentation);
 		} else {
@@ -287,7 +287,7 @@ public class XMLAssert {
 		CompletionItem item = new CompletionItem();
 		item.setLabel(label);
 		item.setFilterText(filterText);
-		item.setTextEdit(textEdit);
+		item.setTextEdit(Either.forLeft(textEdit));
 		return item;
 	}
 
