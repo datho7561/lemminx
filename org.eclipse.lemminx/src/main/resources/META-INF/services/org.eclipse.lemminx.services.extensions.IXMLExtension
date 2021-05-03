@@ -1,3 +1,4 @@
+org.eclipse.lemminx.extensions.schematron.SchematronPlugin
 org.eclipse.lemminx.extensions.contentmodel.ContentModelPlugin
 org.eclipse.lemminx.extensions.references.XMLReferencesPlugin
 org.eclipse.lemminx.extensions.xsd.XSDPlugin

@@ -228,7 +228,9 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 		Iterator<IXMLExtension> extensions = ServiceLoader.load(IXMLExtension.class).iterator();
 		while (extensions.hasNext()) {
 			try {
-				registerExtension(extensions.next());
+				IXMLExtension extension = extensions.next();
+				registerExtension(extension);
+				LOGGER.fine("Loaded extension " + extension.getClass().getName());
 			} catch (ServiceConfigurationError e) {
 				LOGGER.log(Level.SEVERE, "Error while instantiating extension", e);
 			}
@@ -373,7 +375,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 	public void unregisterSymbolsProviderParticipant(ISymbolsProviderParticipant symbolsProviderParticipant) {
 		symbolsProviderParticipants.remove(symbolsProviderParticipant);
 	}
-	
+
 	/**
 	 * Register a new workspace service participant
 	 * @param workspaceServiceParticipant the participant to register
@@ -394,7 +396,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Returns the XML Document provider and null otherwise.
-	 * 
+	 *
 	 * @return the XML Document provider and null otherwise.
 	 */
 	public IXMLDocumentProvider getDocumentProvider() {
@@ -403,7 +405,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Set the XML Document provider
-	 * 
+	 *
 	 * @param documentProvider XML Document provider
 	 */
 	public void setDocumentProvider(IXMLDocumentProvider documentProvider) {
@@ -416,7 +418,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Returns the notification service
-	 * 
+	 *
 	 * @return the notification service
 	 */
 	public IXMLNotificationService getNotificationService() {
@@ -425,7 +427,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Sets the notification service
-	 * 
+	 *
 	 * @param notificationService the new notification service
 	 */
 	public void setNotificationService(IXMLNotificationService notificationService) {
@@ -434,7 +436,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Returns the XML document validation service
-	 * 
+	 *
 	 * @return the validation service
 	 */
 	public IXMLValidationService getValidationService() {
@@ -443,7 +445,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Sets the XML document validation service
-	 * 
+	 *
 	 * @param validationService
 	 */
 	public void setValidationService(IXMLValidationService validationService) {
@@ -452,7 +454,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Returns the LS command service
-	 * 
+	 *
 	 * @return the command service
 	 */
 	public IXMLCommandService getCommandService() {
@@ -461,7 +463,7 @@ public class XMLExtensionsRegistry implements IComponentProvider {
 
 	/**
 	 * Sets the LS command service
-	 * 
+	 *
 	 * @param commandService
 	 */
 	public void setCommandService(IXMLCommandService commandService) {
