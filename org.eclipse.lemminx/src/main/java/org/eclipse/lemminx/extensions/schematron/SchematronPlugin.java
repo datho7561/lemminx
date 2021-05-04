@@ -33,6 +33,7 @@ public class SchematronPlugin implements IXMLExtension {
 
 	public SchematronPlugin() {
 		diagnosticsParticipant = new SchematronDiagnosticsParticipant();
+		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 	}
 
 	@Override
