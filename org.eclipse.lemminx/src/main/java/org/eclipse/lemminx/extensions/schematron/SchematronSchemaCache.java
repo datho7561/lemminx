@@ -1,28 +1,30 @@
+/*******************************************************************************
+* Copyright (c) 2021 Red Hat Inc. and others.
+* All rights reserved. This program and the accompanying materials
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v20.html
+*
+* Contributors:
+*     Red Hat Inc. - initial API and implementation
+*******************************************************************************/
 package org.eclipse.lemminx.extensions.schematron;
 
-import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Path;
 
+/**
+ * Used to cache schemas from the internet locally to increase validation speed
+ */
 public class SchematronSchemaCache {
 
-	private List<URI> cached;
-
-	public SchematronSchemaCache() {
-		cached = new ArrayList<>();
-	}
-
-	public File getSchema(URI schema) {
-		String path = schema.getPath();
-		if (path == null) {
-			return null;
-		}
-		File file = new File(path);
-		if (!file.exists()) {
-			return null;
-		}
-		return file;
+	/**
+	 * Returns a path to the cached version of the schema
+	 *
+	 * @param schema the schema to find the cached version of
+	 * @return a path to the cached version of the schema
+	 */
+	public Path getCachedResource(URI schema) {
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 }

@@ -1,15 +1,12 @@
-/**
- *  Copyright (c) 2018 Angelo ZERR
- *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v2.0
- *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- *  Contributors:
- *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
- */
+/*******************************************************************************
+* Copyright (c) 2021 Red Hat Inc. and others.
+* All rights reserved. This program and the accompanying materials
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v20.html
+*
+* Contributors:
+*     Red Hat Inc. - initial API and implementation
+*******************************************************************************/
 package org.eclipse.lemminx.extensions.schematron;
 
 import org.eclipse.lemminx.services.extensions.IXMLExtension;
@@ -19,12 +16,10 @@ import org.eclipse.lemminx.services.extensions.save.ISaveContext;
 import org.eclipse.lsp4j.InitializeParams;
 
 /**
- * Content model plugin extension to provide:
- *
+ * Schematron extension. It supports:
  * <ul>
- * <li>completion based on XML Schema, DTD...</li>
- * <li>hover based on XML Schema</li>
- * <li>diagnostics based on on XML Schema, DTD...</li>
+ * <li>Validation using Schematron files referenced through
+ * <code>.sch</code></li>
  * </ul>
  */
 public class SchematronPlugin implements IXMLExtension {

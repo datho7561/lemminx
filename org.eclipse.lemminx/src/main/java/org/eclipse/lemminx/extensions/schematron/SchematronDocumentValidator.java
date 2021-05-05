@@ -10,11 +10,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.lemminx.commons.BadLocationException;
@@ -38,12 +38,11 @@ public class SchematronDocumentValidator {
 	private static final Range ZERO_RANGE = new Range(new Position(0, 0), new Position(0, 1));
 
 	// Example:
-	// failed-assert /Q{}Person[1] If the Title is "Mr" then the gender of the person must be "Male".
+	// failed-assert /Q{}Person[1] If the Title is "Mr" then the gender of the
+	// person must be "Male".
 	private static final Pattern SCHEMATRON_MESSAGE_DECODER = Pattern.compile("failed-assert ([^ ]+) (.*)");
 
 	private final XPathFactory xpathFactory = XPathFactory.newInstance();
-
-	private final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 
 	Logger LOGGER = Logger.getLogger(SchematronDocumentValidator.class.getName());
 
@@ -53,62 +52,84 @@ public class SchematronDocumentValidator {
 			URI xmlDocumentURI = new URI(xmlDocument.getDocumentURI());
 			File xmlDocumentFile = new File(xmlDocumentURI);
 			for (File schema : schemaFiles) {
-				Schematron schematron = new Schematron(new StreamSource(schema));
+				Schematron schematron = null;
 				try {
-					Result validationResult = schematron.validate(new StreamSource(xmlDocumentFile));
-					if (!validationResult.isValid()) {
-						for (String message : validationResult.getValidationMessages()) {
-							diagnostics.add(getSchematronMessageAsDiagnostic(message, xmlDocument, xmlDocumentFile));
+					schematron = new Schematron(new StreamSource(schema));
+				} catch (RuntimeException e) {
+					diagnostics.add(getDiagnosticFromInvalidSchematron(schema.getAbsolutePath()));
+				}
+				if (schematron != null) {
+					try {
+						Result validationResult = schematron.validate(new StreamSource(xmlDocumentFile));
+						if (!validationResult.isValid()) {
+							for (String message : validationResult.getValidationMessages()) {
+								diagnostics.add(getSchematronMessageAsDiagnostic(message, xmlDocument, xmlDocumentFile));
+							}
 						}
+					} catch (SchematronException e) {
+						diagnostics.add(getDiagnosticFromInvalidSchematron(schema.getAbsolutePath()));
 					}
-					LOGGER.info(xmlDocumentFile.getAbsolutePath() + " was valid according to " + schema.getAbsolutePath());
-				} catch (SchematronException e) {
-					LOGGER.log(Level.SEVERE, "Unable to validate against schema: " + schema.getAbsolutePath(), e);
 				}
 				cancelChecker.checkCanceled();
 			}
-		} catch (URISyntaxException e1) {
-			LOGGER.log(Level.SEVERE, "Unable to turn document URI into a URI", e1);
+		} catch (URISyntaxException uriException) {
+			LOGGER.log(Level.SEVERE, "Unable to turn document URI into a URI", uriException);
 		}
 		return diagnostics;
 	}
 
 	private Diagnostic getSchematronMessageAsDiagnostic(String message, DOMDocument xmlDocument, File xmlDocumentFile) {
-
 		Diagnostic d = new Diagnostic(ZERO_RANGE, message);
+		d.setCode("failed-assert");
 
 		Matcher m = SCHEMATRON_MESSAGE_DECODER.matcher(message);
-
 		if (m.find()) {
 			d.setMessage(m.group(2));
+			String xpathExpression = getSanitizedXPathExpression(m.group(1));
+			DOMNode node = getNodeFromXPathExpression(xpathExpression, xmlDocument);
 			try {
-				String expression = m.group(1);
-				expression = expression.replace("Q{}", "");
-				expression = expression.replaceFirst("\\[1\\]", "");
-				XPath xpath = xpathFactory.newXPath();
-				XPathExpression compiledExpression = xpath.compile(expression);
-				NodeList nodeList = (NodeList) compiledExpression.evaluate(xmlDocument, XPathConstants.NODESET);
-				if (nodeList.getLength() > 0) {
-					Node node = nodeList.item(0);
-					DOMNode domNode = (DOMNode) node;
-					d.setRange(getRangeFromDOMNode(domNode, xmlDocument));
-				}
-			} catch (Exception e) {
+				d.setRange(getRangeFromDOMNode(node, xmlDocument));
+			} catch (BadLocationException e) {
+				LOGGER.log(Level.SEVERE, "Error while building Schematron diagnostic range", e);
 			}
 		}
-
 		return d;
-
 	}
 
-	private Range getRangeFromDOMNode(DOMNode node, DOMDocument xmlDocument) throws BadLocationException {
-		switch (node.getNodeType()) {
-		case Node.ELEMENT_NODE:
-			DOMElement element = (DOMElement) node;
-			return XMLPositionUtility.selectStartTagName(element);
-		default:
-			return new Range(xmlDocument.positionAt(node.getStart()), xmlDocument.positionAt(node.getEnd()));
+	private DOMNode getNodeFromXPathExpression(String xpathExpression, DOMDocument xmlDocument) {
+		try {
+			XPath xpath = xpathFactory.newXPath();
+			XPathExpression compiledExpression = xpath.compile(xpathExpression);
+			NodeList nodeList = (NodeList) compiledExpression.evaluate(xmlDocument, XPathConstants.NODESET);
+			if (nodeList.getLength() > 0) {
+				Node node = nodeList.item(0);
+				return (DOMNode) node;
+			}
+		} catch (XPathExpressionException e) {
+			LOGGER.log(Level.SEVERE, "Bad XPath when attempting to locate Schematron diagnostic range", e);
 		}
+		return null;
+	}
+
+	private static String getSanitizedXPathExpression(String xpathExpression) {
+		xpathExpression = xpathExpression.replace("Q{}", "");
+		return xpathExpression.replaceFirst("\\[1\\]", "");
+	}
+
+	private static Range getRangeFromDOMNode(DOMNode node, DOMDocument xmlDocument) throws BadLocationException {
+		switch (node.getNodeType()) {
+			case Node.ELEMENT_NODE:
+				DOMElement element = (DOMElement) node;
+				return XMLPositionUtility.selectStartTagName(element);
+			default:
+				return new Range(xmlDocument.positionAt(node.getStart()), xmlDocument.positionAt(node.getEnd()));
+		}
+	}
+
+	private static Diagnostic getDiagnosticFromInvalidSchematron(String schemaPath) {
+		Diagnostic d = new Diagnostic(ZERO_RANGE, "Schema " + schemaPath + " is invalid");
+		d.setCode("bad-schematron");
+		return d;
 	}
 
 }
