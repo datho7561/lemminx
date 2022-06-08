@@ -15,6 +15,7 @@ package org.eclipse.lemminx.commons;
 import static org.eclipse.lemminx.utils.platform.Platform.isWindows;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -83,6 +84,10 @@ public final class ParentProcessWatcher implements Runnable, Function<MessageCon
 		final long pid = server.getParentProcessId();
 		if (pid == 0 || lastActivityTime > (System.currentTimeMillis() - INACTIVITY_DELAY_SECS)) {
 			return true;
+		}
+		Optional<ProcessHandle> optionalProcessHandle = ProcessHandle.of(pid);
+		if (optionalProcessHandle.isPresent()) {
+			return optionalProcessHandle.get().isAlive();
 		}
 		String command;
 		if (isWindows) {
