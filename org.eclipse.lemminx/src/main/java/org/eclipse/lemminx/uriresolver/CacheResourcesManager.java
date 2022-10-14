@@ -231,9 +231,9 @@ public class CacheResourcesManager {
 					conn = url.openConnection();
 					conn.setRequestProperty(USER_AGENT_KEY, USER_AGENT_VALUE);
 				}
-
 				// Download resource in a temporary file
 				Path path = Files.createTempFile(TEMP_DOWNLOAD_DIR, resourceCachePath.getFileName().toString(), ".lemminx");
+
 				try (ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
 						FileOutputStream fos = new FileOutputStream(path.toFile())) {
 					fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -285,7 +285,7 @@ public class CacheResourcesManager {
 		if (conn != null && conn instanceof HttpURLConnection) {
 			try {
 				HttpURLConnection httpConn = (HttpURLConnection) conn;
-				return (String.valueOf(httpConn.getResponseCode()))+ " " + httpConn.getResponseMessage();
+				return (String.valueOf(httpConn.getResponseCode())) + " " + httpConn.getResponseMessage();
 			} catch (IOException e) {
 				// connection refused and no code could be retrived, do nothing
 			}

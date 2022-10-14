@@ -56,7 +56,7 @@ public abstract class AbstractCacheBasedTest {
 	@AfterEach
 	public final void clearCache() throws IOException {
 		if (testWorkDirectory != null && Files.exists(testWorkDirectory)) {
-			MoreFiles.deleteDirectoryContents(testWorkDirectory,RecursiveDeleteOption.ALLOW_INSECURE);
+			MoreFiles.deleteDirectoryContents(testWorkDirectory, RecursiveDeleteOption.ALLOW_INSECURE);
 			Files.delete(testWorkDirectory);
 		}
 		System.clearProperty(FilesUtils.LEMMINX_WORKDIR_KEY);
