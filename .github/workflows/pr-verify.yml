@@ -18,4 +18,4 @@ jobs:
         distribution: 'adopt'
         cache: 'maven'
     - name: Run Tests
-      run: ./mvnw.cmd -B '-Dmaven.test.failure.ignore=true' clean verify
+      run: ./mvnw.cmd -B '-DcacheInRepoDir=true' clean verify
